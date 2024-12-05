@@ -6,8 +6,6 @@ const getHomePage = function (req, res) {
 };
 exports.getHomePage = getHomePage;
 const getSignupForm = function (req, res) {
-    res.render("sign-up", {
-        title: "Sign Up",
-    });
+    res.render("sign-up");
 };
 exports.getSignupForm = getSignupForm;

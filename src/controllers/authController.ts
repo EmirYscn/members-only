@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import * as db from "../db/queries";
 import { createUserDto } from "../dtos/createUser.dto";
 import { validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
 
 export const signupUser = async function (
   req: Request<{}, {}, createUserDto>,
@@ -14,22 +15,17 @@ export const signupUser = async function (
       error: result.array(),
     });
   }
-  const { firstName, lastName, email, password } = req.body;
+  let { firstName, lastName, email, password } = req.body;
 
-  if (!(await db.isEmailValid(email))) {
-    return res.render("sign-up", {
-      error: "Email already in use.",
-    });
-  }
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  // TODO: bcrypt password
   const username = email.split("@")[0];
   const newUser = {
     firstName,
     lastName,
     email,
     username,
-    password,
+    password: hashedPassword,
     membership_status: "regular",
     admin: false,
   };
@@ -42,4 +38,4 @@ export const signupUser = async function (
   }
 };
 
-export const login = async function (req: Request, res: Respond) {};
+export const login = async function (req: Request, res: Response) {};

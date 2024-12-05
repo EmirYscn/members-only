@@ -7,11 +7,11 @@ export const getUsers = async function () {
   return rows;
 };
 
-export const isEmailValid = async function (email: string) {
-  let query = "SELECT email FROM users WHERE email=$1";
+export const findUserByEmail = async function (email: string) {
+  let query = "SELECT user_id FROM users WHERE email=$1";
   try {
     const { rows } = await pool.query(query, [email]);
-    return rows.length <= 0;
+    return rows;
   } catch (error) {
     console.log(error);
   }

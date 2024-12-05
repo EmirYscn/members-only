@@ -41,10 +41,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.signupUser = void 0;
 const db = __importStar(require("../db/queries"));
 const express_validator_1 = require("express-validator");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const signupUser = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = (0, express_validator_1.validationResult)(req);
@@ -54,20 +58,15 @@ const signupUser = function (req, res) {
                 error: result.array(),
             });
         }
-        const { firstName, lastName, email, password } = req.body;
-        if (!(yield db.isEmailValid(email))) {
-            return res.render("sign-up", {
-                error: "Email already in use.",
-            });
-        }
-        // TODO: bcrypt password
+        let { firstName, lastName, email, password } = req.body;
+        const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         const username = email.split("@")[0];
         const newUser = {
             firstName,
             lastName,
             email,
             username,
-            password,
+            password: hashedPassword,
             membership_status: "regular",
             admin: false,
         };

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.isEmailValid = exports.getUsers = void 0;
+exports.createUser = exports.findUserByEmail = exports.getUsers = void 0;
 const pool_1 = require("./pool");
 const getUsers = function () {
     return __awaiter(this, void 0, void 0, function* () {
@@ -19,19 +19,19 @@ const getUsers = function () {
     });
 };
 exports.getUsers = getUsers;
-const isEmailValid = function (email) {
+const findUserByEmail = function (email) {
     return __awaiter(this, void 0, void 0, function* () {
-        let query = "SELECT email FROM users WHERE email=$1";
+        let query = "SELECT user_id FROM users WHERE email=$1";
         try {
             const { rows } = yield pool_1.pool.query(query, [email]);
-            return rows.length <= 0;
+            return rows;
         }
         catch (error) {
             console.log(error);
         }
     });
 };
-exports.isEmailValid = isEmailValid;
+exports.findUserByEmail = findUserByEmail;
 const createUser = function (user) {
     return __awaiter(this, void 0, void 0, function* () {
         let query = "INSERT INTO users (firstName, lastName, email, username, password, membership_status, admin) VALUES ($1, $2, $3, $4, $5, $6, $7)";
