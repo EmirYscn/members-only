@@ -2,6 +2,8 @@ import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import path from "node:path";
 import { router as indexRouter } from "./routes/indexRouter";
+import { sessionMiddleware } from "./db/pool";
+import passport from "passport";
 
 dotenv.config({ path: "./.env" });
 
@@ -15,6 +17,13 @@ app.set("view engine", "pug");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public")));
 
+app.use(sessionMiddleware);
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((req, res, next) => {
+  next();
+});
 app.use("/", indexRouter);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {

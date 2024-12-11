@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.findUser = exports.getUsers = void 0;
+exports.setMembership = exports.createUser = exports.findUser = exports.getUsers = void 0;
 const pool_1 = require("./pool");
 const getUsers = function () {
     return __awaiter(this, void 0, void 0, function* () {
@@ -53,3 +53,15 @@ const createUser = function (user) {
     });
 };
 exports.createUser = createUser;
+const setMembership = function (id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let query = "UPDATE users SET membership_status='member' WHERE user_id=$1";
+        try {
+            yield pool_1.pool.query(query, [id]);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
+};
+exports.setMembership = setMembership;

@@ -42,53 +42,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setMember = exports.getMember = exports.getDashboard = exports.getProfile = exports.getLoginForm = exports.getSignupForm = exports.getHomePage = void 0;
-const db = __importStar(require("../db/user.queries"));
-const getHomePage = function (req, res) {
-    res.render("index");
-};
-exports.getHomePage = getHomePage;
-const getSignupForm = function (req, res) {
-    res.render("sign-up");
-};
-exports.getSignupForm = getSignupForm;
-const getLoginForm = function (req, res) {
-    res.render("login");
-};
-exports.getLoginForm = getLoginForm;
-const getProfile = function (req, res) {
-    res.json({
-        data: {
-            user: req.user,
-        },
-    });
-};
-exports.getProfile = getProfile;
-const getDashboard = function (req, res) {
-    res.json({
-        data: {
-            user: req.user,
-        },
-    });
-};
-exports.getDashboard = getDashboard;
-const getMember = function (req, res) {
-    res.render("member");
-};
-exports.getMember = getMember;
-const setMember = function (req, res) {
+exports.deleteMessage = exports.createMessage = exports.getMessages = void 0;
+const db = __importStar(require("../db/messages.queries"));
+const getMessages = function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { password } = req.body;
-        const secretPassword = process.env.SECRET_CODE;
-        if (password !== secretPassword) {
-            res.render("member", {
-                error: "Wrong password",
-            });
-        }
-        const currentUser = req.user;
-        console.log(currentUser);
+        const messages = yield db.getAllMessages();
+        res.locals.messages = messages;
+        next();
+    });
+};
+exports.getMessages = getMessages;
+const createMessage = function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { title, message } = req.body;
+        const userId = req.user.user_id;
+        const newMessage = {
+            title,
+            message,
+            user_id: userId,
+        };
         try {
-            yield db.setMembership(currentUser.user_id);
+            yield db.createMessage(newMessage);
             res.redirect("/");
         }
         catch (error) {
@@ -96,4 +70,17 @@ const setMember = function (req, res) {
         }
     });
 };
-exports.setMember = setMember;
+exports.createMessage = createMessage;
+const deleteMessage = function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { messageId } = req.params;
+        try {
+            yield db.deleteMessage(messageId);
+            res.redirect("/");
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
+};
+exports.deleteMessage = deleteMessage;

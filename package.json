@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "build:css": "npx tailwindcss -i ./src/styles/index.css -o ./public/index.css",
-    "watch:css": "npx tailwindcss -i ./src/styles/index.css -o ./public/index.css --watch",
     "build:ts": "tsc",
+    "build:css": "npx tailwindcss -i ./src/styles/index.css -o ./public/index.css",
     "watch:ts": "tsc --watch",
+    "watch:css": "npx tailwindcss -i ./src/styles/index.css -o ./public/index.css --watch",
     "dev:server": "nodemon dist/server.js",
     "dev": "concurrently \"npm run watch:ts\" \"npm run watch:css\" \"npm run dev:server\""
   },
@@ -17,8 +17,12 @@
   "license": "ISC",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/connect-pg-simple": "^7.0.3",
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
     "@types/node": "^22.10.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
     "@types/pg": "^8.11.10",
     "autoprefixer": "^10.4.20",
     "concurrently": "^9.1.0",
@@ -32,10 +36,14 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "connect-pg-simple": "^10.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-session": "^1.18.1",
     "express-validator": "^7.2.0",
     "nodemon": "^3.1.7",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.13.1",
     "pug": "^3.0.3"
   }

@@ -44,7 +44,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateForm = void 0;
 const express_validator_1 = require("express-validator");
-const db = __importStar(require("../db/queries"));
+const db = __importStar(require("../db/user.queries"));
 exports.validateForm = [
     (0, express_validator_1.body)("firstName")
         .notEmpty()
@@ -61,9 +61,9 @@ exports.validateForm = [
         .isEmail()
         .withMessage("Please enter a valid email address")
         .custom((value) => __awaiter(void 0, void 0, void 0, function* () {
-        const user = yield db.findUserByEmail(value);
+        const user = yield db.findUser("email", value);
         console.log(user);
-        if (user.length > 0) {
+        if (user) {
             throw new Error("Email already in use");
         }
     })),

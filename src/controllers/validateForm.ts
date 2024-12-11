@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import * as db from "../db/queries";
+import * as db from "../db/user.queries";
 
 export const validateForm = [
   body("firstName")
@@ -21,9 +21,9 @@ export const validateForm = [
     .isEmail()
     .withMessage("Please enter a valid email address")
     .custom(async (value) => {
-      const user = await db.findUserByEmail(value);
+      const user = await db.findUser("email", value);
       console.log(user);
-      if (user.length > 0) {
+      if (user) {
         throw new Error("Email already in use");
       }
     }),

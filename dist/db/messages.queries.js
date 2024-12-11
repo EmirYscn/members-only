@@ -9,47 +9,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.findUser = exports.getUsers = void 0;
+exports.deleteMessage = exports.createMessage = exports.getAllMessages = void 0;
 const pool_1 = require("./pool");
-const getUsers = function () {
+const getAllMessages = function () {
     return __awaiter(this, void 0, void 0, function* () {
-        let query = "SELECT * FROM users";
-        const { rows } = yield pool_1.pool.query(query);
-        return rows;
-    });
-};
-exports.getUsers = getUsers;
-const findUser = function (field, value) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let query = `SELECT * FROM users WHERE ${field}=$1`;
+        let query = "SELECT messages.message_id, messages.title, messages.created_at, messages.message, users.user_id, users.username FROM messages JOIN users ON messages.user_id = users.user_id ORDER BY messages.created_at DESC";
         try {
-            const { rows } = yield pool_1.pool.query(query, [value]);
-            return rows.length > 0 ? rows[0] : null;
-        }
-        catch (error) {
-            console.log(`Error finding user by ${field}: `, error);
-            throw new Error("Database query failed");
-        }
-    });
-};
-exports.findUser = findUser;
-const createUser = function (user) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let query = "INSERT INTO users (firstName, lastName, email, username, password, membership_status, admin) VALUES ($1, $2, $3, $4, $5, $6, $7)";
-        try {
-            yield pool_1.pool.query(query, [
-                user.firstName,
-                user.lastName,
-                user.email,
-                user.username,
-                user.password,
-                user.membership_status,
-                user.admin,
-            ]);
+            const { rows } = yield pool_1.pool.query(query);
+            return rows;
         }
         catch (error) {
             console.log(error);
         }
     });
 };
-exports.createUser = createUser;
+exports.getAllMessages = getAllMessages;
+const createMessage = function (message) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let query = "INSERT INTO messages (title, message, user_id) VALUES ($1, $2, $3)";
+        try {
+            yield pool_1.pool.query(query, [message.title, message.message, message.user_id]);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
+};
+exports.createMessage = createMessage;
+const deleteMessage = function (messageId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let query = "DELETE FROM messages WHERE message_id=$1";
+        try {
+            yield pool_1.pool.query(query, [messageId]);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
+};
+exports.deleteMessage = deleteMessage;

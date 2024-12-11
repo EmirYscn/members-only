@@ -45,10 +45,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.signupUser = void 0;
-const db = __importStar(require("../db/queries"));
+exports.isAdmin = exports.isAuth = exports.signupUser = void 0;
 const express_validator_1 = require("express-validator");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const db = __importStar(require("../db/user.queries"));
 const signupUser = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = (0, express_validator_1.validationResult)(req);
@@ -70,6 +70,20 @@ const signupUser = function (req, res) {
             membership_status: "regular",
             admin: false,
         };
+        // const signupForm: Form<User> = {
+        //   errors: {
+        //     email: "This must be a valid email address",
+        //   },
+        //   values: {
+        //     firstName,
+        //     lastName,
+        //     email,
+        //     username,
+        //     password: hashedPassword,
+        //     membership_status: "regular",
+        //     admin: false,
+        //   },
+        // };
         try {
             yield db.createUser(newUser);
             res.redirect("/login");
@@ -80,7 +94,17 @@ const signupUser = function (req, res) {
     });
 };
 exports.signupUser = signupUser;
-const login = function (req, res) {
-    return __awaiter(this, void 0, void 0, function* () { });
+const isAuth = (req, res, next) => {
+    if (req.isAuthenticated())
+        next();
+    else
+        res.status(401).json({ msg: "You are not authorized" });
 };
-exports.login = login;
+exports.isAuth = isAuth;
+const isAdmin = (req, res, next) => {
+    if (req.user.admin)
+        next();
+    else
+        res.status(401).json({ msg: "You are not authorized" });
+};
+exports.isAdmin = isAdmin;

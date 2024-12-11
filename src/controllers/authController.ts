@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
-import * as db from "../db/queries";
-import { createUserDto } from "../dtos/createUser.dto";
+import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
+import * as db from "../db/user.queries";
+import { createUserDto } from "../dtos/createUser.dto";
+import { Form, User } from "../types/userModel";
 
 export const signupUser = async function (
   req: Request<{}, {}, createUserDto>,
@@ -30,6 +31,21 @@ export const signupUser = async function (
     admin: false,
   };
 
+  // const signupForm: Form<User> = {
+  //   errors: {
+  //     email: "This must be a valid email address",
+  //   },
+  //   values: {
+  //     firstName,
+  //     lastName,
+  //     email,
+  //     username,
+  //     password: hashedPassword,
+  //     membership_status: "regular",
+  //     admin: false,
+  //   },
+  // };
+
   try {
     await db.createUser(newUser);
     res.redirect("/login");
@@ -38,4 +54,12 @@ export const signupUser = async function (
   }
 };
 
-export const login = async function (req: Request, res: Response) {};
+export const isAuth = (req: Request, res: Response, next: NextFunction) => {
+  if (req.isAuthenticated()) next();
+  else res.status(401).json({ msg: "You are not authorized" });
+};
+
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if ((req.user as User).admin) next();
+  else res.status(401).json({ msg: "You are not authorized" });
+};

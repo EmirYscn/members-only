@@ -6,6 +6,7 @@ html
       meta(name='viewport', content='width=device-width, initial-scale=1.0')
       //- link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
       link(rel='stylesheet', href='/index.css') 
+      script(defer src='/deleteMessage.js')
       //- link(rel="shortcut icon", type='image/png', href='/img/favicon.png') 
       title Members Only | #{title}
 
@@ -14,10 +15,9 @@ html
     include _header
 
     // Content
-    div(class='bg-blue-900 overflow-scroll ')
+    div(class='bg-stone-200/70 overflow-scroll ')
       main(class='mx-auto flex items-center justify-center h-full')
         block content
-          h1 This is a placehodler heading
 
     // Footer
     include _footer

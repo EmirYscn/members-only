@@ -41,59 +41,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setMember = exports.getMember = exports.getDashboard = exports.getProfile = exports.getLoginForm = exports.getSignupForm = exports.getHomePage = void 0;
+const passport_1 = __importDefault(require("passport"));
+const passport_local_1 = require("passport-local");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const db = __importStar(require("../db/user.queries"));
-const getHomePage = function (req, res) {
-    res.render("index");
-};
-exports.getHomePage = getHomePage;
-const getSignupForm = function (req, res) {
-    res.render("sign-up");
-};
-exports.getSignupForm = getSignupForm;
-const getLoginForm = function (req, res) {
-    res.render("login");
-};
-exports.getLoginForm = getLoginForm;
-const getProfile = function (req, res) {
-    res.json({
-        data: {
-            user: req.user,
-        },
-    });
-};
-exports.getProfile = getProfile;
-const getDashboard = function (req, res) {
-    res.json({
-        data: {
-            user: req.user,
-        },
-    });
-};
-exports.getDashboard = getDashboard;
-const getMember = function (req, res) {
-    res.render("member");
-};
-exports.getMember = getMember;
-const setMember = function (req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { password } = req.body;
-        const secretPassword = process.env.SECRET_CODE;
-        if (password !== secretPassword) {
-            res.render("member", {
-                error: "Wrong password",
-            });
-        }
-        const currentUser = req.user;
-        console.log(currentUser);
-        try {
-            yield db.setMembership(currentUser.user_id);
-            res.redirect("/");
-        }
-        catch (error) {
-            console.log(error);
-        }
-    });
-};
-exports.setMember = setMember;
+const verifyCallback = (email, password, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield db.findUser("email", email);
+        if (!user)
+            return done(null, false, { message: "No user with that email" });
+        const isValid = yield bcryptjs_1.default.compare(password, user.password.toString());
+        if (!isValid)
+            return done(null, false, { message: "Password incorrect" });
+        done(null, user);
+    }
+    catch (error) {
+        return done(error);
+    }
+});
+const strategy = new passport_local_1.Strategy({ usernameField: "email" }, verifyCallback);
+passport_1.default.use(strategy);
+passport_1.default.serializeUser((user, done) => {
+    done(null, user.user_id);
+});
+passport_1.default.deserializeUser((id, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield db.findUser("user_id", id);
+        if (!user)
+            throw new Error("User not found");
+        done(null, user);
+    }
+    catch (error) {
+        done(error);
+    }
+}));
+exports.default = passport_1.default;

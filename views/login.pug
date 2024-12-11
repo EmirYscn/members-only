@@ -1,0 +1,16 @@
+extends base
+
+mixin inputBox(label, name, type, placeholder=null, error=null, value=null)
+  div(class='mb-5 flex flex-col gap-3 sm:flex-row sm:items-center')
+    label(for=name class='sm:basis-40 text-white')= label
+    input(type=`${type}` name=name id=name placeholder=placeholder value=value required class='border-b  border-stone-300 px-4 py-2 text-sm placeholder:text-stone-400 focus:outline-none md:px-4 md:py-2 grow bg-stone-100/10 bg-blue-900')
+  if error
+    p(class='text-sm text-red-500 mt-1 mb-1')= `* ${error.msg}`
+
+block content
+  form(action="/login", method="post" class='flex flex-col bg-blue-900 px-16 py-12 rounded-md shadow-2xl w-5/12')
+    h1(class='mb-8 text-3xl font-semibold text-white') Log In
+    +inputBox('Email', 'email', 'text', 'John@doe', error && error.find(err=>err.path === 'email'), body && body.email)
+    +inputBox('Password', 'password', 'password', '', error && error.find(err=>err.path === 'password'), body && body.password)
+    div(class='mt-8')
+      button(type="submit" class='inline-block text-sm rounded-full bg-white font-semibold px-8 py-3 md:px-12 md:py-4 w-full') Log in

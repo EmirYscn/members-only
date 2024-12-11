@@ -1,4 +1,20 @@
-header(class="flex items-center justify-between py-4 px-8 uppercase bg-blue-950 text-stone-300 shadow-2xl shadow-stone-50")
-  a.tracking-widest.text-3xl.font-semibold(href="/") Members Only
-  div 
-  
+mixin actionButton(to, text=null, img=null, style=null)
+  a(href=to class='flex gap-1 items-center justify-center')
+    button(class=`px-2 py-1 rounded-sm hover:scale-105 transition-all duration-300 active:translate-x-[2px] active:translate-y-[2px] ${style}`)
+      if img
+      img(src=`/icons/${img}` class='h-6' alt=text)
+
+header(class="flex items-center justify-between py-4 px-8 bg-blue-950 text-stone-300 shadow-2xl shadow-stone-50")
+  a(class="tracking-widest text-3xl uppercase font-semibold" href='/') Members Only
+  div(class='text-base flex gap-2 items-center') 
+    if currentUser
+      if currentUser.membership_status === 'regular'
+        +actionButton('/member', '⚜️', null, 'rounded-full')
+      if currentUser.admin 
+        +actionButton('/dashboard', "Dashboard", 'dashboard.svg')
+          //- a(href="/dashboard") Dashboard
+      +actionButton('/profile', currentUser.username, 'user.svg')
+      +actionButton('/logout', 'Log out', 'logout.svg')
+    else
+      +actionButton('/login', 'Log in', 'login.svg')
+      +actionButton('/signup', 'Sign up', 'signup.svg')
