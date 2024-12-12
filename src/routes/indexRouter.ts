@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { validateForm } from "../controllers/validateForm";
+import { validateForm, validatePassword } from "../controllers/validateForm";
 
 import * as indexController from "../controllers/indexController";
 import * as authController from "../controllers/authController";
@@ -32,7 +32,24 @@ router
     }),
   );
 
-router.get("/profile", authController.isAuth, indexController.getProfile);
+router
+  .route("/profile/overview")
+  .get(authController.isAuth, indexController.getProfile)
+  .patch(authController.isAuth, indexController.editProfile);
+
+router
+  .route("/profile/membership")
+  .get(authController.isAuth, indexController.getMembership)
+  .patch(authController.isAuth, indexController.leaveMembership);
+
+router
+  .route("/profile/changePassword")
+  .get(authController.isAuth, indexController.getChangePassword)
+  .patch(
+    authController.isAuth,
+    validatePassword,
+    indexController.changePassword,
+  );
 
 router.get(
   "/dashboard",

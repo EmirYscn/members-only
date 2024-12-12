@@ -1,0 +1,18 @@
+extends profile
+mixin inputBox(label, name, type, placeholder=null, error=null, value=null)
+  div(class='mb-5 flex flex-col gap-3 sm:flex-row sm:items-center')
+    label(for=name class='sm:basis-40 text-black')= label
+    input(type=`${type}` name=name id=name placeholder=placeholder value=value required disabled class='border rounded-full border-stone-300 px-4 py-2 text-sm placeholder:text-stone-800 focus:outline-none md:px-4 md:py-2 bg-blue-900 w-[300px] text-white disabled:bg-blue-800/30 disabled:text-black')
+    button(type='button' id=`edit_${name}` onclick=`editField(event,'${name}')`) Edit
+  if error
+    p(class='text-sm text-red-500 mt-1 mb-1')= `* ${error.msg}`
+
+block innerContent
+  form(action="/profile/overview/?_method=PATCH", method="post" class='flex flex-col')
+    h1(class='mb-8 text-3xl font-semibold text-black') Overview
+    +inputBox('First Name', 'firstname', 'text', 'John', error && error.find(err=>err.path === 'firstName'), currentUser.firstname)
+    +inputBox('Last Name', 'lastname', 'text', 'Doe', error && error.find(err=>err.path === 'lastName'), currentUser.lastname)
+    +inputBox('Username', 'username', 'username', 'john@doe.com', error && error.find(err=>err.path === 'email'), currentUser.username)
+    +inputBox('Email', 'email', 'email', 'john@doe.com', error && error.find(err=>err.path === 'email'), currentUser.email)
+    div(class='mt-2')
+      button(type="submit" class='inline-block text-sm rounded-full bg-blue-900 shadow-lg text-white font-semibold px-8 py-3') Done

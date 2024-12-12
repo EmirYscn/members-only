@@ -3,7 +3,7 @@ extends base
 mixin inputBox(label, name, type, placeholder=null, error=null, value=null)
   div(class='mb-5 flex flex-col gap-3 sm:flex-row sm:items-center')
     label(for=name class='sm:basis-40 text-white')= label
-    input(type=`${type}` name=name id=name placeholder=placeholder value=value required class='border-b  border-stone-300 px-4 py-2 text-sm placeholder:text-stone-400 focus:outline-none md:px-4 md:py-2 grow bg-stone-100/10 bg-blue-900')
+    input(type=`${type}` name=name id=name placeholder=placeholder value=value required class=' px-4 py-2 text-sm placeholder:text-stone-400 text-white focus:outline-none focus:ring-2 rounded-full md:px-4 md:py-2 grow bg-stone-100/10 bg-blue-900')
   if error
     p(class='text-sm text-red-500 mt-1 mb-1')= `* ${error.msg}`
 

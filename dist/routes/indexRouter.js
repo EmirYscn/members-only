@@ -62,7 +62,18 @@ router
     successRedirect: "/",
     failureRedirect: "/login",
 }));
-router.get("/profile", authController.isAuth, indexController.getProfile);
+router
+    .route("/profile/overview")
+    .get(authController.isAuth, indexController.getProfile)
+    .patch(authController.isAuth, indexController.editProfile);
+router
+    .route("/profile/membership")
+    .get(authController.isAuth, indexController.getMembership)
+    .patch(authController.isAuth, indexController.leaveMembership);
+router
+    .route("/profile/changePassword")
+    .get(authController.isAuth, indexController.getChangePassword)
+    .patch(authController.isAuth, validateForm_1.validatePassword, indexController.changePassword);
 router.get("/dashboard", authController.isAuth, authController.isAdmin, indexController.getDashboard);
 router
     .route("/member")

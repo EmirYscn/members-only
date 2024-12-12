@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const node_path_1 = __importDefault(require("node:path"));
+const method_override_1 = __importDefault(require("method-override"));
 const indexRouter_1 = require("./routes/indexRouter");
 const pool_1 = require("./db/pool");
 const passport_1 = __importDefault(require("passport"));
 dotenv_1.default.config({ path: "./.env" });
 const app = (0, express_1.default)();
+app.use((0, method_override_1.default)("_method"));
 // setting up template engine
 app.set("./views", node_path_1.default.join(__dirname, "views"));
 app.set("view engine", "pug");

@@ -58,32 +58,18 @@ const signupUser = function (req, res) {
                 error: result.array(),
             });
         }
-        let { firstName, lastName, email, password } = req.body;
+        let { firstname, lastname, email, password } = req.body;
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         const username = email.split("@")[0];
         const newUser = {
-            firstName,
-            lastName,
+            firstname,
+            lastname,
             email,
             username,
             password: hashedPassword,
             membership_status: "regular",
             admin: false,
         };
-        // const signupForm: Form<User> = {
-        //   errors: {
-        //     email: "This must be a valid email address",
-        //   },
-        //   values: {
-        //     firstName,
-        //     lastName,
-        //     email,
-        //     username,
-        //     password: hashedPassword,
-        //     membership_status: "regular",
-        //     admin: false,
-        //   },
-        // };
         try {
             yield db.createUser(newUser);
             res.redirect("/login");

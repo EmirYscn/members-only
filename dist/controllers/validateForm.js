@@ -41,17 +41,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateForm = void 0;
+exports.validatePassword = exports.validateForm = void 0;
 const express_validator_1 = require("express-validator");
 const db = __importStar(require("../db/user.queries"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 exports.validateForm = [
-    (0, express_validator_1.body)("firstName")
+    (0, express_validator_1.body)("firstname")
         .notEmpty()
         .trim()
         .isLength({ min: 2, max: 30 })
         .withMessage("First name can not be less than 2 and more than 30 characters"),
-    (0, express_validator_1.body)("lastName")
+    (0, express_validator_1.body)("lastname")
         .notEmpty()
         .trim()
         .isLength({ min: 2, max: 30 })
@@ -65,6 +69,28 @@ exports.validateForm = [
         console.log(user);
         if (user) {
             throw new Error("Email already in use");
+        }
+    })),
+    (0, express_validator_1.body)("password")
+        .isLength({ min: 8 })
+        .withMessage("Password can not be less than 8 characters"),
+    (0, express_validator_1.body)("confirmPassword").custom((value, { req }) => {
+        if (value !== req.body.password) {
+            throw new Error("Passwords do not match");
+        }
+        return true;
+    }),
+];
+exports.validatePassword = [
+    (0, express_validator_1.body)("currentPassword")
+        .notEmpty()
+        .trim()
+        .isLength({ min: 2, max: 30 })
+        .withMessage("First name can not be less than 2 and more than 30 characters")
+        .custom((value_1, _a) => __awaiter(void 0, [value_1, _a], void 0, function* (value, { req }) {
+        const isValid = yield bcryptjs_1.default.compare(value, req.user.password.toString());
+        if (!isValid) {
+            throw new Error("Password is not correct");
         }
     })),
     (0, express_validator_1.body)("password")

@@ -1,8 +1,11 @@
 mixin actionButton(to, text=null, img=null, style=null)
   a(href=to class='flex gap-1 items-center justify-center')
-    button(class=`px-2 py-1 rounded-sm hover:scale-105 transition-all duration-300 active:translate-x-[2px] active:translate-y-[2px] ${style}`)
+    button(class=`px-2 py-1 rounded-sm hover:scale-105 transition-all duration-300 active:translate-x-[2px] active:translate-y-[2px] ${style} flex gap-1`)
       if img
-      img(src=`/icons/${img}` class='h-6' alt=text)
+        img(src=`/icons/${img}` class='h-6' alt=text)
+        span= text
+      else
+        span= text
 
 header(class="flex items-center justify-between py-4 px-8 bg-blue-950 text-stone-300 shadow-2xl shadow-stone-50")
   a(class="tracking-widest text-3xl uppercase font-semibold" href='/') Members Only
@@ -13,7 +16,7 @@ header(class="flex items-center justify-between py-4 px-8 bg-blue-950 text-stone
       if currentUser.admin 
         +actionButton('/dashboard', "Dashboard", 'dashboard.svg')
           //- a(href="/dashboard") Dashboard
-      +actionButton('/profile', currentUser.username, 'user.svg')
+      +actionButton('/profile/overview', currentUser.username, 'user.svg')
       +actionButton('/logout', 'Log out', 'logout.svg')
     else
       +actionButton('/login', 'Log in', 'login.svg')

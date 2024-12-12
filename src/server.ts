@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import path from "node:path";
+import methodOverride from "method-override";
 import { router as indexRouter } from "./routes/indexRouter";
 import { sessionMiddleware } from "./db/pool";
 import passport from "passport";
@@ -9,6 +10,7 @@ dotenv.config({ path: "./.env" });
 
 const app = express();
 
+app.use(methodOverride("_method"));
 // setting up template engine
 app.set("./views", path.join(__dirname, "views"));
 app.set("view engine", "pug");

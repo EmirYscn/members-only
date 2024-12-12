@@ -1,0 +1,16 @@
+extends base 
+
+block content
+  div(class='grid grid-cols-[auto_1fr] w-full h-full')
+    div(class='flex flex-col gap-2 px-8 pt-8 border-r-2 border-stone-200 bg-blue-950/95 text-white')
+      h1.text-2xl.font-semibold.border-b.text-start.pb-2 Profile
+      ul
+        a(href='/profile/overview') 
+          li Overview
+        a(href='/profile/membership') 
+          li Membership
+        a(href='/profile/changePassword') 
+          li Change password
+    div(class='px-8 pt-8')
+      block innerContent
+        

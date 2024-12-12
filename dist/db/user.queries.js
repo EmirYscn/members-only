@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setMembership = exports.createUser = exports.findUser = exports.getUsers = void 0;
+exports.leaveMembership = exports.editUser = exports.setMembership = exports.createUser = exports.findUser = exports.getUsers = void 0;
 const pool_1 = require("./pool");
 const getUsers = function () {
     return __awaiter(this, void 0, void 0, function* () {
@@ -35,11 +35,11 @@ const findUser = function (field, value) {
 exports.findUser = findUser;
 const createUser = function (user) {
     return __awaiter(this, void 0, void 0, function* () {
-        let query = "INSERT INTO users (firstName, lastName, email, username, password, membership_status, admin) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+        let query = "INSERT INTO users (firstname, lastname, email, username, password, membership_status, admin) VALUES ($1, $2, $3, $4, $5, $6, $7)";
         try {
             yield pool_1.pool.query(query, [
-                user.firstName,
-                user.lastName,
+                user.firstname,
+                user.lastname,
                 user.email,
                 user.username,
                 user.password,
@@ -65,3 +65,39 @@ const setMembership = function (id) {
     });
 };
 exports.setMembership = setMembership;
+const editUser = function (id, body) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!body)
+            return;
+        let num = 1;
+        let query = "UPDATE users SET ";
+        Object.keys(body).forEach((key, index) => {
+            if (index !== 0)
+                query += ", ";
+            query += `${key}=$${num} `;
+            num++;
+        });
+        query += `WHERE user_id=$${num}`;
+        console.log(query);
+        console.log([...Object.values(body), id]);
+        try {
+            yield pool_1.pool.query(query, [...Object.values(body), id]);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
+};
+exports.editUser = editUser;
+const leaveMembership = function (id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let query = "UPDATE users SET membership_status='regular' WHERE user_id=$1";
+        try {
+            yield pool_1.pool.query(query, [id]);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
+};
+exports.leaveMembership = leaveMembership;
