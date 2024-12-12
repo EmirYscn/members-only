@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
+    "build": "npm install && tsc",
     "build:ts": "tsc",
     "build:css": "npx tailwindcss -i ./src/styles/index.css -o ./public/index.css",
     "watch:ts": "tsc --watch",
