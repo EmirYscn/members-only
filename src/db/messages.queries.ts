@@ -5,7 +5,7 @@ type Message = {
   title: string;
   created_at?: Date;
   message: string;
-  user_id: string;
+  user_id: string | undefined;
 };
 
 export const getAllMessages = async function (): Promise<

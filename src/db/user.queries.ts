@@ -50,7 +50,7 @@ export const createUser = async function (user: User) {
   }
 };
 
-export const setMembership = async function (id: string) {
+export const setMembership = async function (id: string | undefined) {
   let query = "UPDATE users SET membership_status='member' WHERE user_id=$1";
   try {
     await pool.query(query, [id]);
@@ -60,8 +60,10 @@ export const setMembership = async function (id: string) {
 };
 
 export const editUser = async function (
-  id: string,
-  body: { firstname: string; lastname: string; email: string } | string,
+  id: string | undefined,
+  body:
+    | { firstname: string; lastname: string; email: string }
+    | { password: string },
 ) {
   if (!body) return;
   let num = 1;
@@ -81,7 +83,7 @@ export const editUser = async function (
   }
 };
 
-export const leaveMembership = async function (id: string) {
+export const leaveMembership = async function (id: string | undefined) {
   let query = "UPDATE users SET membership_status='regular' WHERE user_id=$1";
   try {
     await pool.query(query, [id]);

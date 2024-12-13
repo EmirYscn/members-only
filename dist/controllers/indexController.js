@@ -95,7 +95,7 @@ const changePassword = function (req, res) {
                 error: result.array(),
             });
         }
-        const { currentPassword, password, passwordConfirm } = req.body;
+        const { password } = req.body;
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         try {
             yield db.editUser(currentUser.user_id, {

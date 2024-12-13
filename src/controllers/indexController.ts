@@ -46,7 +46,7 @@ export const changePassword = async function (req: Request, res: Response) {
       error: result.array(),
     });
   }
-  const { currentPassword, password, passwordConfirm } = req.body;
+  const { password } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -95,7 +95,7 @@ export const setMember = async function (req: Request, res: Response) {
   const currentUser = req.user;
   console.log(currentUser);
   try {
-    await db.setMembership(currentUser.user_id);
+    await db.setMembership((currentUser as User).user_id);
     res.redirect("/");
   } catch (error) {
     console.log(error);

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import * as db from "../db/messages.queries";
+import { User } from "../types/userModel";
 
 export const getMessages = async function (
   req: Request,
@@ -13,7 +14,7 @@ export const getMessages = async function (
 
 export const createMessage = async function (req: Request, res: Response) {
   const { title, message } = req.body;
-  const userId = req.user.user_id;
+  const userId = (req.user as User).user_id;
   const newMessage = {
     title,
     message,
